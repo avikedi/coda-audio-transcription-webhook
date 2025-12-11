@@ -1,0 +1,10 @@
+Django==5.0
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+gunicorn==21.2.0
+openai-whisper==20240930
+codaio==0.6.12
+requests==2.32.4
+python-dotenv==1.2.1
+celery==5.3.4
+redis==5.0.1
