@@ -8,11 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install only essential system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
-    git \
-    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
@@ -26,11 +24,12 @@ COPY . /app/
 # Create temp directory for audio files
 RUN mkdir -p /tmp/audio
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Create empty static directory and collect static files
+RUN mkdir -p /app/staticfiles && \
+    python manage.py collectstatic --noinput || true
 
 # Expose port
 EXPOSE 8000
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "300", "transcription_service.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "2", "--timeout", "300", "transcription_service.wsgi:application"]
