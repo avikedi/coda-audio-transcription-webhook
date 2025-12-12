@@ -32,4 +32,5 @@ RUN mkdir -p /app/staticfiles && \
 EXPOSE 8000
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "2", "--timeout", "300", "transcription_service.wsgi:application"]
+# Use shell form to allow PORT variable expansion
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 300 transcription_service.wsgi:application
